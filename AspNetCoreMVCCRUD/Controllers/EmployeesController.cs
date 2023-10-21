@@ -36,29 +36,29 @@ namespace AspNetCoreMVCCRUD.Controllers
             return View();
         }
 
-//        /// <summary>
-//        /// 
-//        /// </summary>
-//        /// <param name="addEmployeeRequest"></param>
-//        /// <returns></returns>
-//        [HttpPost]
-//        public IActionResult Add(AddEmployeeViewModel addEmployeeRequest)
-//        {
-//            var employee = new Employee()
-//            {
-//                Id = Guid.NewGuid(),
-//                Name = addEmployeeRequest.Name,
-//                Email = addEmployeeRequest.Email,
-//                Salary = addEmployeeRequest.Salary,
-//                Department = addEmployeeRequest.Department,
-//                DateofBirth = addEmployeeRequest.DateofBirth
-//            };
+        //        /// <summary>
+        //        /// 
+        //        /// </summary>
+        //        /// <param name="addEmployeeRequest"></param>
+        //        /// <returns></returns>
+        //        [HttpPost]
+        //        public IActionResult Add(AddEmployeeViewModel addEmployeeRequest)
+        //        {
+        //            var employee = new Employee()
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                Name = addEmployeeRequest.Name,
+        //                Email = addEmployeeRequest.Email,
+        //                Salary = addEmployeeRequest.Salary,
+        //                Department = addEmployeeRequest.Department,
+        //                DateofBirth = addEmployeeRequest.DateofBirth
+        //            };
 
-//            mvcDemoDbContext.Employees.Add(employee);
-//            mvcDemoDbContext.SaveChanges();
-//            return RedirectToAction("Add");
-////            return View(addEmployeeRequest);
-//        }
+        //            mvcDemoDbContext.Employees.Add(employee);
+        //            mvcDemoDbContext.SaveChanges();
+        //            return RedirectToAction("Add");
+        ////            return View(addEmployeeRequest);
+        //        }
 
         /// <summary>
         /// async conversion
@@ -82,6 +82,55 @@ namespace AspNetCoreMVCCRUD.Controllers
             await mvcDemoDbContext.SaveChangesAsync();
             return RedirectToAction("Index");
             //            return View(addEmployeeRequest);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> View(Guid id)
+        {
+            var employee = await mvcDemoDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+            if (employee != null)
+            {
+                var viewModel = new UpdateEmployeeViewModel()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    Email = employee.Email,
+                    Salary = employee.Salary,
+                    Department = employee.Department,
+                    DateofBirth = employee.DateofBirth
+                };
+                return await Task.Run(() => View("View",viewModel));
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> View(UpdateEmployeeViewModel model)
+        {
+            var employee = await mvcDemoDbContext.Employees.FindAsync(model.Id);
+            if (employee != null) 
+            {
+                employee.Name = model.Name;
+                employee.Email = model.Email;
+                employee.Salary = model.Salary;
+                employee.DateofBirth = model.DateofBirth;
+                employee.Department = model.Department;
+
+                await mvcDemoDbContext.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
         }
     }
 }
