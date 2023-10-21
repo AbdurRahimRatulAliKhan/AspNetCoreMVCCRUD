@@ -6,10 +6,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AspNetCoreMVCCRUD.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class EmployeesController : Controller
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private readonly MVCDemoDbContext mvcDemoDbContext;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mvcDemoDbContext"></param>
         public EmployeesController(MVCDemoDbContext mvcDemoDbContext)
         {
             this.mvcDemoDbContext = mvcDemoDbContext;
